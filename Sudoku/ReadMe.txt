@@ -6,6 +6,11 @@ AppWizard has created this [!output PROJECT_NAME] application for you.
 
 This file contains a summary of what you will find in each of the files that
 make up your [!output PROJECT_NAME] application.
+	
+    Sudoku
+
+    This application contains a number of classes built to facilitate generating, interacting with,
+    solving, and validating Sudoku puzzles. 	
 
 
     This is the main project file for VC++ projects generated using an Application Wizard.
