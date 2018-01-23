@@ -1,12 +1,11 @@
 #pragma once
-//#include <vector>
 
 class SudokuPuzzle
 {
 private:
-	std::vector<int> InitialPuzzle; 
-	std::vector<int> Puzzle;
-	std::vector<int> PuzzleSolution;
+	std::vector<int> initialpuzzle; 
+	std::vector<int> puzzle;
+	std::vector<int> puzzlesolution;
 
 	int attempts;
 

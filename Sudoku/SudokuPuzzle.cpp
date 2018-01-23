@@ -1,9 +1,7 @@
 #include "stdafx.h"
 
-
 // constructor 
-
-SudokuPuzzle::SudokuPuzzle() :InitialPuzzle(81, 0), Puzzle(81, 0), PuzzleSolution(81, 0)
+SudokuPuzzle::SudokuPuzzle() :initialpuzzle(81, 0), puzzle(81, 0), puzzlesolution(81, 0)
 {
 	attempts = 0; 
 }
@@ -20,19 +18,19 @@ void SudokuPuzzle::setAttempts(int val)
 
 std::vector<int> SudokuPuzzle::getPuzzle()
 {
-	return Puzzle;
+	return puzzle;
 }
 
 std::vector<int> SudokuPuzzle::getSolution()
 {
-	return PuzzleSolution; 
+	return puzzlesolution; 
 }
 
 void SudokuPuzzle::writeInitialPuzzleToConsole()
 {
-	for (size_t i = 0; i < InitialPuzzle.size(); i++)
+	for (size_t i = 0; i < initialpuzzle.size(); i++)
 	{
-		std::cout << InitialPuzzle[i] << " ";
+		std::cout << initialpuzzle[i] << " ";
 
 		if ((i + 1) % 9 == 0)
 		{
@@ -44,9 +42,9 @@ void SudokuPuzzle::writeInitialPuzzleToConsole()
 
 void SudokuPuzzle::writePuzzleToConsole()
 {
-	for (size_t i = 0; i < Puzzle.size(); i++)
+	for (size_t i = 0; i < puzzle.size(); i++)
 	{
-		std::cout << Puzzle[i] << " ";
+		std::cout << puzzle[i] << " ";
 
 		if ((i + 1) % 9 == 0)
 		{
@@ -58,9 +56,9 @@ void SudokuPuzzle::writePuzzleToConsole()
 
 void SudokuPuzzle::writePuzzleSolutionToConsole()
 {
-	for (size_t i = 0; i < PuzzleSolution.size(); i++)
+	for (size_t i = 0; i < puzzlesolution.size(); i++)
 	{
-		std::cout << PuzzleSolution[i] << " ";
+		std::cout << puzzlesolution[i] << " ";
 
 		if ((i + 1) % 9 == 0)
 		{
@@ -77,11 +75,11 @@ void SudokuPuzzle::getInitialPuzzle()
 
 	char digit;
 
-	for (size_t i = 0; i < InitialPuzzle.size(); i++)
+	for (size_t i = 0; i < initialpuzzle.size(); i++)
 	{
 		file >> digit;
-		InitialPuzzle[i] = digit - '0';
-		Puzzle[i] = digit - '0';
+		initialpuzzle[i] = digit - '0';
+		puzzle[i] = digit - '0';
 	}
 }
 
@@ -100,14 +98,14 @@ bool SudokuPuzzle::solvePuzzle()
 				isValInPuzzleColumn(i, position) == false &&
 				isValInPuzzleSection(i, position) == false)
 				{
-				Puzzle[position] = i;
+				puzzle[position] = i;
 
 				if (solvePuzzle() == true)
 				{
 					return true;
 				}
 
-				Puzzle[position] = 0;
+				puzzle[position] = 0;
 			}
 
 		}
@@ -127,7 +125,7 @@ bool SudokuPuzzle::isValInPuzzleRow(int val, int position)
 
 	for (size_t i = (x * 9); i < (x * 9) + 9; i++)
 	{
-		if (Puzzle[i] == val)
+		if (puzzle[i] == val)
 		{
 			return true;
 		}
@@ -141,7 +139,7 @@ bool SudokuPuzzle::isValInPuzzleColumn(int val, int position)
 
 	for (size_t i = 0; i < 9; i++)
 	{
-		if (Puzzle[(i * 9) + y] == val)
+		if (puzzle[(i * 9) + y] == val)
 		{
 			return true;
 		}
@@ -168,9 +166,9 @@ bool SudokuPuzzle::isValInPuzzleSection(int val, int position)
 	// loop through 3 rows and check the 3 colunns for the grid 'section' the position is in. 
 	for (int i = k; i < k + 3; i++)
 	{
-		if (Puzzle[(i * 9) + j] == val ||
-			Puzzle[(i * 9) + j + 1] == val ||
-			Puzzle[(i * 9) + j + 2] == val)
+		if (puzzle[(i * 9) + j] == val ||
+			puzzle[(i * 9) + j + 1] == val ||
+			puzzle[(i * 9) + j + 2] == val)
 			return true;
 	}
 	return false;
@@ -179,9 +177,9 @@ bool SudokuPuzzle::isValInPuzzleSection(int val, int position)
 
 int SudokuPuzzle::findFirstEmptyCell() 
 {
-	for (int i = 0; i < Puzzle.size(); i++)
+	for (int i = 0; i < puzzle.size(); i++)
 	{
-		if (Puzzle[i] == 0)
+		if (puzzle[i] == 0)
 		{
 			return i;
 		}
