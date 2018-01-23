@@ -14,6 +14,7 @@
 #include <string>
 #include <fstream>
 #include "SudokuPuzzle.h"
+#include "SudokuMiner.h"
 
 
 
