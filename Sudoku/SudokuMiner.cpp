@@ -1,20 +1,74 @@
 #include "stdafx.h"
 
-std::vector<int> generateSeededPuzzle()
+SudokuMiner::SudokuMiner() : puzzle(81, 0)
 {
-	// initial empty puzzle
+	desired_difficulty = 25;
+	desired_number_of_puzzles = 1;
+	output_filefile = "output.txt";
+
+}
+
+void SudokuMiner::minePuzzles(int attempts, int difficulty)
+{
+	// for now count will be how many puzzles to mine before shutting off
+	//int count = 1;
+	
+	std::srand(std::time(NULL)); // seed random number generator once per mining session rather than for each puzzle 
+
+	for (int i = 0; i < attempts; i++)
+	{	
+		std::cout << "Mining for puzzle " << i + 1 << std::endl;
+
+		resetAndSeedPuzzle(difficulty);
+
+		writePuzzleToConsole();
+
+		bool rc = solvePuzzle();
+
+		if (rc == true)
+		{
+			std::cout << "Solved!" << std::endl;
+		}
+		else if (rc == false)
+		{
+			std::cout << "No Solution" << std::endl;
+		}
+
+		writePuzzleToConsole();
+	}
+}
+
+
+void SudokuMiner::resetAndSeedPuzzle(int random_nodes_count)
+{
+	// reset puzzle
+
+	for (int i = 0; i < puzzle.size(); i++)
+	{
+		puzzle[i] = 0;
+	}
 
 	// add some number n of 'nodes' to the puzzle randomly
+	//random_nodes_count = 25; // Strict minimum of 17 to ensure only 1 unique solution and upper bound ~35 before trivially easy
 
-	// check to ensure that the puzzle is trivially solvable (nodes break the row, column, or section safety)
+	for (int i = 0; i < random_nodes_count; i++)
+	{
+		int position = (std::rand() % 80); // pick a random cell 
+		int val = (std::rand() % 9) + 1; // generate a new value 
 
+		// ensure that a placed node doesn't break the solvability of the puzzle or overwrite an already placed node 
+		while (puzzle[position] != 0 ||
+			SudokuMiner::isValInPuzzleRow(val, position) == true ||
+			SudokuMiner::isValInPuzzleColumn(val, position) == true ||
+			SudokuMiner::isValInPuzzleSection(val, position) == true) 
+		{
+			position = (std::rand() % 80);
+		}
+
+		puzzle[position] = val;
+	}
 }
 
-std::vector<int> generateSeededPuzzle(int difficulty)
-{
-	// how does the number of nodes relate to puzzle difficulty?
-
-}
 
 bool SudokuMiner::solvePuzzle()
 {
@@ -29,14 +83,14 @@ bool SudokuMiner::solvePuzzle()
 				isValInPuzzleColumn(i, position) == false &&
 				isValInPuzzleSection(i, position) == false)
 			{
-				Puzzle[position] = i;
+				puzzle[position] = i;
 
 				if (solvePuzzle() == true)
 				{
 					return true;
 				}
 
-				Puzzle[position] = 0;
+				puzzle[position] = 0;
 			}
 
 		}
@@ -49,15 +103,102 @@ bool SudokuMiner::solvePuzzle()
 	}
 }
 
-void writePuzzleDataToFile()
+void SudokuMiner::writePuzzleDataToFile()
 {
 	// write puzzle data to a text file, one puzzle per row 
 	// puzzle id #, # nodes, RawPuzzleData, RawPuzzleSolution 
 
+	/*
+	std::ofstream file;
+	file.open("mining_results.txt", std::ofstream::out | std::ofstream::app);
+	file << 
+	*/	
 }
 
-void minePuzzles()
+
+bool SudokuMiner::isValInPuzzleRow(int val, int position)
 {
-	// the manager to run the puzzle finding operation
-	// inputs: desired difficutly, desired number of puzzles, text file name for output
+	int x = position / 9; // gives the 'row' by throwing away the remainder
+
+	for (int i = (x * 9); i < (x * 9) + 9; i++)
+	{
+		if (puzzle[i] == val)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool SudokuMiner::isValInPuzzleColumn(int val, int position)
+{
+	int y = position % 9; // gives the 'column' by taking the remainder
+
+	for (size_t i = 0; i < 9; i++)
+	{
+		if (puzzle[(i * 9) + y] == val)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool SudokuMiner::isValInPuzzleSection(int val, int position)
+{
+	int k = 0;
+	int j = 0;
+
+	// determine if the position is in the first 3, middle 3, or bottom 3 rows
+	if (position < 27) { k = 0; }
+	else if (position < 54) { k = 3; }
+	else if (position < 81) { k = 6; }
+
+	// determine if the position is in the first 3, middle 3, or last 3 columns
+	if (position % 9 < 3) { j = 0; }
+	else if (position % 9 < 6) { j = 3; }
+	else if (position % 9 < 9) { j = 6; }
+
+
+	// loop through 3 rows and check the 3 colunns for the grid 'section' the position is in. 
+	for (int i = k; i < k + 3; i++)
+	{
+		if (puzzle[(i * 9) + j] == val ||
+			puzzle[(i * 9) + j + 1] == val ||
+			puzzle[(i * 9) + j + 2] == val)
+			return true;
+	}
+	return false;
+}
+
+int SudokuMiner::findFirstEmptyCell()
+{
+	for (size_t i = 0; i < puzzle.size(); i++)
+	{
+		if (puzzle[i] == 0)
+		{
+			return i;
+		}
+	}
+
+	return -1; // Puzzle is full
+}
+
+void SudokuMiner::writePuzzleToConsole()
+{
+	for (size_t i = 0; i < puzzle.size(); i++)
+	{
+		std::cout << puzzle[i] << " ";
+
+		if ((i + 1) % 9 == 0)
+		{
+			std::cout << std::endl;
+		}
+	}
+	std::cout << std::endl;
+}
+
+bool SudokuMiner::isSeedValid()
+{
+	return true; 
 }

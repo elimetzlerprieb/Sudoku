@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
 #include "SudokuPuzzle.h"
 #include "SudokuMiner.h"
 

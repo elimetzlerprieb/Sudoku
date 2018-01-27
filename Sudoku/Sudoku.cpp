@@ -7,17 +7,20 @@
 
 int main()
 {
-	int rc = 0;
-
+	/*
 	SudokuPuzzle newPuzzle;
-	newPuzzle.writePuzzleToConsole();
-
 	newPuzzle.getInitialPuzzle();
 	newPuzzle.writeInitialPuzzleToConsole();
-	newPuzzle.writePuzzleToConsole();
 	newPuzzle.solvePuzzle();
 	newPuzzle.writePuzzleToConsole();
-	newPuzzle.writePuzzleSolutionToConsole();
+
+	std::cout << "Nice" << std::endl;
+	*/
+
+	SudokuMiner miner;
+	miner.minePuzzles(1, 25);
+
+
 
 	char y; 
 	std::cout << "Get char" << std::endl; 

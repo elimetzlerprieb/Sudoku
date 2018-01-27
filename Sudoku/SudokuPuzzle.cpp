@@ -26,6 +26,16 @@ std::vector<int> SudokuPuzzle::getSolution()
 	return puzzlesolution; 
 }
 
+
+void writePuzzleToConsole(std::vector<int>& output)
+{
+
+
+
+
+
+}
+
 void SudokuPuzzle::writeInitialPuzzleToConsole()
 {
 	for (size_t i = 0; i < initialpuzzle.size(); i++)
@@ -112,7 +122,7 @@ bool SudokuPuzzle::solvePuzzle()
 		return false;
 	}
 	// Base Case (puzzle is full) 
-	else if (position == -1)
+	else //if (position == -1)
 	{
 		return true;
 	}
@@ -123,7 +133,7 @@ bool SudokuPuzzle::isValInPuzzleRow(int val, int position)
 {
 	int x = position / 9; // gives the 'row' by throwing away the remainder
 
-	for (size_t i = (x * 9); i < (x * 9) + 9; i++)
+	for (int i = (x * 9); i < (x * 9) + 9; i++)
 	{
 		if (puzzle[i] == val)
 		{
@@ -177,7 +187,7 @@ bool SudokuPuzzle::isValInPuzzleSection(int val, int position)
 
 int SudokuPuzzle::findFirstEmptyCell() 
 {
-	for (int i = 0; i < puzzle.size(); i++)
+	for (size_t i = 0; i < puzzle.size(); i++)
 	{
 		if (puzzle[i] == 0)
 		{

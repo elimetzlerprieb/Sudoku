@@ -2,13 +2,6 @@
 
 class SudokuPuzzle
 {
-private:
-	std::vector<int> initialpuzzle; 
-	std::vector<int> puzzle;
-	std::vector<int> puzzlesolution;
-
-	int attempts;
-
 public:
 	// constructor 
 	SudokuPuzzle();
@@ -18,7 +11,9 @@ public:
 	void writePuzzleToConsole();
 	void writePuzzleSolutionToConsole();
 
-	int getAttempts(); 
+	void writePuzzleToConsole(std::vector<int> output);
+
+	int getAttempts();
 	void setAttempts(int val);
 
 	std::vector<int> getPuzzle();
@@ -30,6 +25,13 @@ public:
 	int findFirstEmptyCell();
 
 	bool solvePuzzle();
+
+private:
+	std::vector<int> initialpuzzle; 
+	std::vector<int> puzzle;
+	std::vector<int> puzzlesolution;
+
+	int attempts;
 };
 
 	/*
