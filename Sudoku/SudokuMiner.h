@@ -7,14 +7,17 @@ public:
 	SudokuMiner(); 
 
 	void minePuzzles(int attempts, int difficulty);
-	void writePuzzleToConsole();
 
 private:
 	std::vector<int> puzzle; 
+	std::vector<int> seed; 
+
+	void writePuzzleToConsole();
 
 	int desired_difficulty;
 	int desired_number_of_puzzles;
-	std::string output_filefile; 
+	bool has_solution;
+	std::string output_file; 
 
 	void resetAndSeedPuzzle(int random_nodes_count);
 	bool isSeedValid();
@@ -24,10 +27,7 @@ private:
 	bool isValInPuzzleColumn(int val, int position);
 	bool isValInPuzzleSection(int val, int position);
 	int findFirstEmptyCell();
-	
-	
-	
+
 	void writePuzzleDataToFile();
-
-
+	void writeFailureToFile(); 
 };

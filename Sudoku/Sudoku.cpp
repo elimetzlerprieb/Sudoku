@@ -18,7 +18,7 @@ int main()
 	*/
 
 	SudokuMiner miner;
-	miner.minePuzzles(1, 25);
+	miner.minePuzzles(10, 25);
 
 
 

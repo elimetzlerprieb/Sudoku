@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
-SudokuMiner::SudokuMiner() : puzzle(81, 0)
+SudokuMiner::SudokuMiner() : puzzle(81, 0), seed(81, 0)
 {
 	desired_difficulty = 25;
 	desired_number_of_puzzles = 1;
-	output_filefile = "output.txt";
+	output_file = "output.txt";
+	has_solution = false; 
 
 }
 
@@ -15,8 +16,10 @@ void SudokuMiner::minePuzzles(int attempts, int difficulty)
 	
 	std::srand(std::time(NULL)); // seed random number generator once per mining session rather than for each puzzle 
 
+	has_solution = false;
+
 	for (int i = 0; i < attempts; i++)
-	{	
+	{
 		std::cout << "Mining for puzzle " << i + 1 << std::endl;
 
 		resetAndSeedPuzzle(difficulty);
@@ -28,13 +31,24 @@ void SudokuMiner::minePuzzles(int attempts, int difficulty)
 		if (rc == true)
 		{
 			std::cout << "Solved!" << std::endl;
+			has_solution = true; 
 		}
 		else if (rc == false)
 		{
 			std::cout << "No Solution" << std::endl;
+			has_solution = false;
 		}
 
 		writePuzzleToConsole();
+
+		if (has_solution == true)
+		{
+			writePuzzleDataToFile();
+		}
+		else if (has_solution == false)
+		{
+			writeFailureToFile();
+		}
 	}
 }
 
@@ -46,6 +60,7 @@ void SudokuMiner::resetAndSeedPuzzle(int random_nodes_count)
 	for (int i = 0; i < puzzle.size(); i++)
 	{
 		puzzle[i] = 0;
+		seed[i] = 0; 
 	}
 
 	// add some number n of 'nodes' to the puzzle randomly
@@ -60,12 +75,13 @@ void SudokuMiner::resetAndSeedPuzzle(int random_nodes_count)
 		while (puzzle[position] != 0 ||
 			SudokuMiner::isValInPuzzleRow(val, position) == true ||
 			SudokuMiner::isValInPuzzleColumn(val, position) == true ||
-			SudokuMiner::isValInPuzzleSection(val, position) == true) 
+			SudokuMiner::isValInPuzzleSection(val, position) == true)
 		{
 			position = (std::rand() % 80);
 		}
 
 		puzzle[position] = val;
+		seed[position] = val; 
 	}
 }
 
@@ -105,14 +121,53 @@ bool SudokuMiner::solvePuzzle()
 
 void SudokuMiner::writePuzzleDataToFile()
 {
-	// write puzzle data to a text file, one puzzle per row 
-	// puzzle id #, # nodes, RawPuzzleData, RawPuzzleSolution 
+	// write puzzle data to a text file, one puzzle per row  
+	// has_solution, seed, solution, number of nodes 
 
-	/*
-	std::ofstream file;
-	file.open("mining_results.txt", std::ofstream::out | std::ofstream::app);
-	file << 
-	*/	
+	std::ofstream outputfile;
+	outputfile.open("puzzle_set.txt", std::ofstream::app);
+	// this function only called if puzzle is solved successfully
+	outputfile << "1,"; 
+
+	// print the seed that was solved
+	for (int i = 0; i < seed.size(); i++)
+	{
+		outputfile << seed[i];
+	}
+
+	outputfile << ",";
+
+	// and the solved puzzle
+	for (int i = 0; i < puzzle.size(); i++)
+	{
+		outputfile << puzzle[i];
+	}
+
+	// and the number of nodes 
+	outputfile << "," << desired_difficulty; 
+
+	outputfile << std::endl;
+
+	outputfile.close();
+}
+
+void SudokuMiner::writeFailureToFile()
+{
+	std::ofstream outputfile;
+	outputfile.open("puzzle_set.txt", std::ofstream::app);
+
+	// this function only called if puzzle is unsolvable
+	outputfile << "0,";
+
+	// and the seed that was solved
+	for (int i = 0; i < seed.size(); i++)
+	{
+		outputfile << seed[i];
+	}
+
+	outputfile << std::endl;
+
+	outputfile.close();
 }
 
 
